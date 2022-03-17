@@ -5,8 +5,7 @@ import { generateShortUrl, getShortenedUrl, deleteShortenedUrl } from "../contro
 
 const shortenerRouter = Router();
 shortenerRouter.post('/urls/shorten', validateTokenMiddleware, generateShortUrl);
-shortenerRouter.get('/urls/:shortUrl', getShortenedUrl)
+shortenerRouter.get('/urls/:shortUrl', getShortenedUrl);
 shortenerRouter.delete('/urls/:id', validateTokenMiddleware, deleteShortenedUrl);
-
 
 export default shortenerRouter;

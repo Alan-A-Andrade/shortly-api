@@ -35,3 +35,37 @@ export async function getUser(req, res) {
     return res.sendStatus(500);
   }
 }
+
+export async function getUserStatus(req, res) {
+
+  const { id } = req.params
+
+  try {
+    const { rows: userData } = await connection.query(`
+        SELECT *, s.id as "shortUrlId"
+        FROM "users" u
+        JOIN "shortenedUrls" s ON s.users = u.id
+        WHERE u.id = $1
+        `, [id])
+
+    if (userData.length === 0) {
+      return res.sendStatus(404)
+    }
+
+    const obj = { id: userData[0].id, name: userData[0].name }
+
+    const shortenedUrls = userData.map((el) => { return { id: el.shortUrlId, shortUrl: el.shortUrl, url: el.url, visitCount: el.visitCount } })
+
+    obj.shortenedUrls = shortenedUrls
+
+    return res.send(obj)
+
+  } catch (error) {
+
+    console.log(error)
+
+    return res.sendStatus(500);
+
+  }
+
+}
